@@ -1,6 +1,4 @@
-
-# Hệ Thống Quản Lý Đơn Nghỉ Phép  
-![Trạng thái](https table://img.shields.io/badge/Trạng_thái-Đang_phát_triển-blueviolet?style=flat-square)
+# Hệ Thống Quản Lý Đơn Nghỉ Phép ![Trạng thái](https://img.shields.io/badge/Trạng_thái-Đang_phát_triển-blue?style=for-the-badge)
 
 ## 1. 🏢 Giới thiệu
 Hệ thống giúp nhân viên tạo, theo dõi đơn nghỉ phép và cho phép quản lý xét duyệt đơn của cấp dưới. Hệ thống được xây dựng với **Java Servlet & JSP**, **SQL Server (JDBC)**, và chạy trên **Apache Tomcat 10.1.36** theo mô hình **MVC**.
