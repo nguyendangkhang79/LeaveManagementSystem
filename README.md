@@ -1,3 +1,4 @@
+
 # Hệ Thống Quản Lý Đơn Nghỉ Phép  
 ![Trạng thái](https table://img.shields.io/badge/Trạng_thái-Đang_phát_triển-blueviolet?style=flat-square)
 
