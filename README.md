@@ -43,7 +43,7 @@ CREATE TABLE LeaveRequests (
     status VARCHAR(20) DEFAULT 'Inprogress',
     processed_by INT FOREIGN KEY REFERENCES Users(user_id) NULL
 );
-6. Hướng dẫn cài đặt
+##6. Hướng dẫn cài đặt
 Yêu cầu hệ thống
 JDK 11+
 Apache Tomcat 10.1.36
@@ -60,13 +60,12 @@ Bước 3: Chạy trên Tomcat
 Sao chép thư mục dự án vào webapps của Tomcat.
 Khởi động Tomcat và truy cập:
 http://localhost:8080/LeaveRequestSystem
-7. Hướng dẫn sử dụng
+##7. Hướng dẫn sử dụng
 Nhân viên: Tạo đơn và xem trạng thái.
 Quản lý: Duyệt/từ chối đơn của cấp dưới.
 Trưởng phòng: Xem lịch nghỉ của toàn bộ nhân sự.
-8. Liên hệ
-Email: support@company.com
-GitHub Issues: Link GitHub Repository
+##8. Liên hệ
+Email: khangndhe186523@fpt.edu.vn
 Cảm ơn bạn đã sử dụng hệ thống!
 
 text
