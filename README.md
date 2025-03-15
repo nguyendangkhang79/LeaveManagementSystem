@@ -1,64 +1,72 @@
-# Assignment_LeaveManagementSystem
-# Hệ thống Quản lý Đơn Nghỉ Phép
+# Hệ Thống Quản Lý Nghỉ Phép 🚀
 
-## 1. Giới thiệu
-Hệ thống giúp nhân viên tạo, theo dõi đơn nghỉ phép và cho phép quản lý xét duyệt đơn của cấp dưới. Hệ thống được xây dựng với **Java Servlet & JSP**, **SQL Server (JDBC)**, và chạy trên **Apache Tomcat 10.1.36** theo mô hình **MVC**.
+![Trạng thái](https://img.shields.io/badge/Trạng_thái-Đang_phát_triển-yellow?style=for-the-badge)  
+Chào mừng đến với **Hệ Thống Quản Lý Nghỉ Phép** - ứng dụng web giúp quản lý đơn xin nghỉ phép tại Công ty X! Được xây dựng bằng Java Servlet, JSP và SQL Server, dự án sử dụng mô hình MVC để đảm bảo tính mở rộng.
 
-## 2. Công nghệ sử dụng
-- **Backend**: Java Servlet & JSP
-- **Frontend**: HTML/CSS, JSP
-- **Database**: SQL Server (JDBC)
-- **Server**: Apache Tomcat 10.1.36
-- **Không sử dụng**: Maven, JSON
+## 🌟 Tổng Quan
 
-## 3. Chức năng chính
-- Đăng nhập, phân quyền nhân viên và quản lý.
-- Nhân viên tạo đơn nghỉ phép.
-- Quản lý xét duyệt đơn.
-- Trưởng phòng xem lịch nghỉ của nhân sự.
+Hệ thống hỗ trợ:  
+- 📝 Tạo đơn xin nghỉ phép (ngày bắt đầu, kết thúc, lý do).  
+- 👀 Xem đơn của bản thân hoặc cấp dưới (dành cho quản lý).  
+- ✅ Duyệt/từ chối đơn (dành cho quản lý).  
+- 📅 Xem lịch nghỉ phép của phòng ban qua Agenda.  
 
-## 4. Cấu trúc thư mục
-```
-LeaveRequestSystem/
-│── WebContent/ (Giao diện JSP, CSS)
-│── src/ (Code Java: Controller, Model, DAO)
-│── WEB-INF/ (Cấu hình web.xml)
-│── lib/ (Thư viện JDBC)
-```
+Chạy trên **Apache Tomcat 10.1.36**, đây là giải pháp nhẹ nhưng mạnh mẽ!
 
-## 5. Cấu trúc Database
-```sqlsever
-```
+## 🛠️ Công Nghệ
 
-## 6. Hướng dẫn cài đặt
-### Yêu cầu hệ thống
-- **JDK 11+**
-- **Apache Tomcat 10.1.36**
-- **SQL Server** với JDBC Driver
+- **Backend**: Java Servlet & JSP  
+- **Frontend**: HTML, CSS, JSP  
+- **Cơ sở dữ liệu**: SQL Server (kết nối qua JDBC)  
+- **Server**: Apache Tomcat 10.1.36  
+- **Kiến trúc**: MVC  
 
-### Bước 1: Cấu hình cơ sở dữ liệu
-1. Tạo database `LeaveSystem` trên SQL Server.
-2. Chạy các lệnh SQL trên.
+> **Lưu ý**: Không dùng Maven hay JSON - thuần Java web! 😎
 
-### Bước 2: Cấu hình kết nối JDBC
-Mở `DBConnection.java` và sửa thông tin:
-```java
-private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=LeaveSystem;encrypt=true;trustServerCertificate=true;";
-private static final String USER = "sa";
-private static final String PASSWORD = "yourpassword";
-```
+## 📂 Cấu Trúc Dự Án
+LeaveManagement/
+├── src/
+│   ├── model/      # Lớp dữ liệu (User, LeaveRequest,...)
+│   ├── dao/        # Truy cập dữ liệu (UserDAO,...)
+│   └── servlet/    # Điều khiển (LoginServlet,...)
+├── web/
+│   ├── WEB-INF/    # Cấu hình (web.xml)
+│   ├── css/        # CSS (style.css)
+│   └── *.jsp       # Giao diện (Login.jsp,...)
 
-### Bước 3: Chạy trên Tomcat
-1. Copy thư mục vào `webapps` của Tomcat.
-2. Khởi động Tomcat, truy cập `http://localhost:8080/LeaveRequestSystem`.
+## 🚀 Hướng Dẫn Cài Đặt
 
-## 7. Hướng dẫn sử dụng
-- Nhân viên tạo đơn, theo dõi trạng thái.
-- Quản lý duyệt đơn của cấp dưới.
-- Trưởng phòng xem lịch nghỉ của nhân sự.
+1. **Clone dự án**: `git clone https://github.com/username/LeaveManagement.git`  
+2. **Tạo database**: Tạo `LeaveManagement` trong SQL Server, chạy script bảng `Users`, `LeaveRequests`,...  
+3. **Cấu hình JDBC**: Cập nhật thông tin kết nối trong DAO.  
+4. **Triển khai**: Copy file `.war` vào `Tomcat/webapps/`, khởi động server.  
+5. **Truy cập**: Mở `http://localhost:8080/LeaveManagement`.
 
-## 8. Liên hệ
-- **Email**: khangndhe186523@fpt.edu.vn
----
-🚀 *Cảm ơn bạn đã sử dụng hệ thống!*
+## 🎯 Tính Năng
+
+- 🔐 Đăng nhập an toàn.  
+- ✍️ Tạo đơn xin nghỉ phép.  
+- 👓 Xem danh sách đơn.  
+- ✔️ Duyệt/từ chối đơn.  
+- 📆 Lịch nghỉ phép phòng ban.
+
+## 🤝 Đóng Góp
+
+1. Fork repo 🍴  
+2. Tạo branch mới: `git checkout -b feature/tinh-nang-moi`  
+3. Commit: `git commit -m "Thêm tính năng mới"`  
+4. Push: `git push origin feature/tinh-nang-moi`  
+5. Tạo Pull Request 🚀  
+
+## 📜 Giấy Phép
+
+Dự án dùng giấy phép MIT.
+
+## 👨‍💻 Tác Giả
+
+- **Contact**: [khangndhe186523@fpt.edu.vn]  
+
+⭐ **Thả sao nếu bạn thấy hữu ích!** ⭐  
+🚀 Cảm ơn bạn đã sử dụng hệ thống!
+
 
