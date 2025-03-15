@@ -1,5 +1,5 @@
-# Hệ Thống Quản Lý Đơn Nghỉ Phép ![Trạng thái](https://img.shields.io/badge/Trạng_thái-Đang_phát_triển-blue?style=for-the-badge)
-
+![Trạng thái](https://img.shields.io/badge/Status-In_Progress-yellow?style=for-the-badge)
+# Hệ Thống Quản Lý Đơn Nghỉ Phép
 ## 1. 🏢 Giới thiệu
 Hệ thống Quản lý Đơn Nghỉ Phép giúp nhân viên dễ dàng gửi yêu cầu nghỉ phép và cho phép quản lý theo dõi, phê duyệt đơn từ cấp dưới một cách hiệu quả. Hệ thống hỗ trợ quy trình xét duyệt rõ ràng, giúp minh bạch hóa việc quản lý nhân sự và tối ưu hóa nguồn lực trong doanh nghiệp.
 
