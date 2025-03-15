@@ -8,7 +8,6 @@ Hệ thống Quản lý Đơn Nghỉ Phép giúp nhân viên dễ dàng gửi y�
 - **Frontend**: HTML/CSS, JSP
 - **Database**: SQL Server (JDBC)
 - **Server**: Apache Tomcat 10.1.36
-- **Không sử dụng**: Maven, JSON
 
 ## 3. 🔹 Chức năng chính
 - **Đăng nhập & phân quyền**: Nhân viên và quản lý có các quyền khác nhau.
