@@ -1,0 +1,12 @@
+Cách triển khai:
+Thêm giao diện biểu đồ (dùng Chart.js) hoặc bảng thống kê.
+Ví dụ: "Tháng 1/2025: 5 Approved, 2 Rejected."
+3. Tính năng dành cho trưởng phòng
+
+
+c. Xuất báo cáo (Export Report)
+Mô tả: Xuất dữ liệu Agenda hoặc danh sách đơn dưới dạng PDF/Excel.
+Lý do: Hỗ trợ lưu trữ hoặc gửi báo cáo cho ban lãnh đạo.
+Cách triển khai:
+Thêm nút "Export" trong Agenda và màn hình Xem đơn.
+Sử dụng thư viện như jsPDF hoặc ExcelJS để tạo file.
