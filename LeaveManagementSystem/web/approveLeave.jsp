@@ -765,8 +765,8 @@
             </div>
         </div>
         <div class="modal-body">
-            <h3 class="modal-title">Phê duyệt thành công!</h3>
-            <p class="modal-message">Đơn nghỉ phép đã được phê duyệt. Nhân viên sẽ nhận được thông báo về quyết định của bạn.</p>
+            <h3 class="modal-title">Xác nhận phê duyệt!</h3>
+            <p class="modal-message">Đơn nghỉ phép sẽ được phê duyệt. Nhân viên sẽ nhận được thông báo về quyết định của bạn.</p>
             
             <div class="modal-info">
                 <div class="modal-info-item">
