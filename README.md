@@ -31,7 +31,7 @@ LeaveRequestSystem/
 - **SQL Server** với JDBC Driver
 
 ### 🔹 Bước 1: Cấu hình cơ sở dữ liệu
-1. Tạo database `LeaveSystem` trên SQL Server.
+1. Tạo database `LeaveManagementDB` trên SQL Server.
 2. Chạy các lệnh SQL trên.
 
 ### 🔹 Bước 2: Cấu hình kết nối JDBC
@@ -42,9 +42,8 @@ private static final String USER = "sa";
 private static final String PASSWORD = "yourpassword";
 ```
 
-### 🔹 Bước 3: Chạy trên Tomcat
-1. Copy thư mục vào `webapps` của Tomcat.
-2. Khởi động Tomcat, truy cập `http://localhost:8080/LeaveRequestSystem`.
+### 🔹 Bước 3: Run
+1. Khởi động Tomcat trên Netbean, và nhấn Run.
 
 ## 6. 📌 Hướng dẫn sử dụng
 - **Nhân viên**: Đăng nhập, tạo đơn nghỉ, theo dõi trạng thái.
