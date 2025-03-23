@@ -43,7 +43,8 @@ public class LeaveRequestDAO {
                     rs.getDate("to_date"),
                     rs.getString("reason"),
                     rs.getString("status"),
-                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null
+                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null,
+                    rs.getString("approval_note") // Thêm trường mới
                 ));
             }
         } catch (SQLException e) {
@@ -67,7 +68,8 @@ public class LeaveRequestDAO {
                     rs.getDate("to_date"),
                     rs.getString("reason"),
                     rs.getString("status"),
-                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null
+                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null,
+                    rs.getString("approval_note") // Thêm trường mới
                 ));
             }
         } catch (SQLException e) {
@@ -76,6 +78,7 @@ public class LeaveRequestDAO {
         return requests;
     }
 
+    // Phương thức cập nhật cũ (giữ lại để đảm bảo tương thích ngược)
     public void updateLeaveRequest(int id, String status, int processedBy) {
         String sql = "UPDATE LeaveRequests SET status = ?, processed_by = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -83,6 +86,21 @@ public class LeaveRequestDAO {
             ps.setString(1, status);
             ps.setInt(2, processedBy);
             ps.setInt(3, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Phương thức cập nhật mới có thêm approvalNote
+    public void updateLeaveRequest(int id, String status, int processedBy, String approvalNote) {
+        String sql = "UPDATE LeaveRequests SET status = ?, processed_by = ?, approval_note = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, processedBy);
+            ps.setString(3, approvalNote);
+            ps.setInt(4, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,7 +121,8 @@ public class LeaveRequestDAO {
                     rs.getDate("to_date"),
                     rs.getString("reason"),
                     rs.getString("status"),
-                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null
+                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null,
+                    rs.getString("approval_note") // Thêm trường mới
                 );
             }
         } catch (SQLException e) {
@@ -136,9 +155,6 @@ public class LeaveRequestDAO {
             ps.setDate(6, startDate);
             ps.setDate(7, endDate);
             
-            System.out.println("SQL: " + sql); // Debug SQL
-            System.out.println("Department: " + department + ", Start: " + startDate + ", End: " + endDate); // Debug params
-            
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LeaveRequest req = new LeaveRequest(
@@ -148,14 +164,12 @@ public class LeaveRequestDAO {
                     rs.getDate("to_date"),
                     rs.getString("reason"),
                     rs.getString("status"),
-                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null
+                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null,
+                    rs.getString("approval_note") // Thêm trường mới
                 );
                 requests.add(req);
-                System.out.println("Found leave: " + req.getId() + " for user " + req.getUserId() + 
-                                   " from " + req.getFromDate() + " to " + req.getToDate()); // Debug results
             }
         } catch (SQLException e) {
-            System.out.println("Error in getApprovedLeavesByDepartment: " + e.getMessage());
             e.printStackTrace();
         }
         
@@ -191,7 +205,8 @@ public class LeaveRequestDAO {
                     rs.getDate("to_date"),
                     rs.getString("reason"),
                     rs.getString("status"),
-                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null
+                    rs.getObject("processed_by") != null ? rs.getInt("processed_by") : null,
+                    rs.getString("approval_note") // Thêm trường mới
                 ));
             }
         } catch (SQLException e) {
@@ -200,4 +215,31 @@ public class LeaveRequestDAO {
         
         return requests;
     }
+    
+    // Xóa một đơn nghỉ phép cụ thể
+  public boolean deleteLeaveRequest(int leaveId) {
+    String sql = "DELETE FROM LeaveRequests WHERE id = ?";
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, leaveId);
+        int result = ps.executeUpdate();
+        return result > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+    // Xóa toàn bộ đơn nghỉ phép
+public boolean deleteAllLeaveRequests() {
+    String sql = "DELETE FROM LeaveRequests";
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.executeUpdate(); // Không cần kiểm tra kết quả vì có thể không có dòng nào bị xóa
+        return true;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 }

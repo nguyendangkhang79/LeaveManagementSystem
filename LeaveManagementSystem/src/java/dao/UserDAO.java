@@ -271,37 +271,26 @@ public boolean addUser(User user) {
     
     // Kiểm tra xem có ai đang tham chiếu đến người dùng này không
     private boolean hasReferences(int userId) {
-        // Kiểm tra trong bảng LeaveRequests
-        String sql1 = "SELECT COUNT(*) FROM LeaveRequests WHERE user_id=? OR processed_by=?";
         // Kiểm tra trong bảng Users (có ai lấy người này làm manager không)
-        String sql2 = "SELECT COUNT(*) FROM Users WHERE manager_id=?";
+        String sql1 = "SELECT COUNT(*) FROM Users WHERE manager_id=?";
         // Kiểm tra trong bảng Departments (có ai lấy người này làm manager không)
-        String sql3 = "SELECT COUNT(*) FROM Departments WHERE manager_id=?";
+        String sql2 = "SELECT COUNT(*) FROM Departments WHERE manager_id=?";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps1 = conn.prepareStatement(sql1);
-             PreparedStatement ps2 = conn.prepareStatement(sql2);
-             PreparedStatement ps3 = conn.prepareStatement(sql3)) {
+             PreparedStatement ps2 = conn.prepareStatement(sql2)) {
             
-            // Kiểm tra tham chiếu trong LeaveRequests
+            // Kiểm tra tham chiếu trong Users
             ps1.setInt(1, userId);
-            ps1.setInt(2, userId);
             ResultSet rs1 = ps1.executeQuery();
             if (rs1.next() && rs1.getInt(1) > 0) {
                 return true; // Có tham chiếu
             }
             
-            // Kiểm tra tham chiếu trong Users
+            // Kiểm tra tham chiếu trong Departments
             ps2.setInt(1, userId);
             ResultSet rs2 = ps2.executeQuery();
             if (rs2.next() && rs2.getInt(1) > 0) {
-                return true; // Có tham chiếu
-            }
-            
-            // Kiểm tra tham chiếu trong Departments
-            ps3.setInt(1, userId);
-            ResultSet rs3 = ps3.executeQuery();
-            if (rs3.next() && rs3.getInt(1) > 0) {
                 return true; // Có tham chiếu
             }
             
