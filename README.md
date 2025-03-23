@@ -43,7 +43,7 @@ private static final String PASSWORD = "yourpassword";
 ```
 
 ### 🔹 Bước 3: Run
-1. Khởi động Tomcat trên Netbean, và nhấn Run.
+ Khởi động Tomcat trên Netbean, và nhấn Run để chạy dự án.
 
 ## 6. 📌 Hướng dẫn sử dụng
 - **Nhân viên**: Đăng nhập, tạo đơn nghỉ, theo dõi trạng thái.
