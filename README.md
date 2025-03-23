@@ -24,28 +24,7 @@ LeaveRequestSystem/
 │── lib/ (Thư viện JDBC)
 ```
 
-## 5. 🗄️ Cấu trúc Database
-```sql
-CREATE TABLE Users (
-    user_id INT PRIMARY KEY IDENTITY(1,1),
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(20) NOT NULL,
-    department VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE LeaveRequests (
-    request_id INT PRIMARY KEY IDENTITY(1,1),
-    user_id INT FOREIGN KEY REFERENCES Users(user_id),
-    from_date DATE NOT NULL,
-    to_date DATE NOT NULL,
-    reason TEXT NOT NULL,
-    status VARCHAR(20) DEFAULT 'Inprogress',
-    processed_by INT FOREIGN KEY REFERENCES Users(user_id) NULL
-);
-```
-
-## 6. 🚀 Hướng dẫn cài đặt
+## 5. 🚀 Hướng dẫn cài đặt
 ### 🔧 Yêu cầu hệ thống
 - **JDK 11+**
 - **Apache Tomcat 10.1.36**
@@ -67,12 +46,12 @@ private static final String PASSWORD = "yourpassword";
 1. Copy thư mục vào `webapps` của Tomcat.
 2. Khởi động Tomcat, truy cập `http://localhost:8080/LeaveRequestSystem`.
 
-## 7. 📌 Hướng dẫn sử dụng
+## 6. 📌 Hướng dẫn sử dụng
 - **Nhân viên**: Đăng nhập, tạo đơn nghỉ, theo dõi trạng thái.
 - **Quản lý**: Duyệt hoặc từ chối đơn nghỉ của cấp dưới.
 - **Trưởng phòng**: Xem lịch nghỉ của nhân viên trong phòng.
 
-## 8. 📞 Liên hệ
+## 7. 📞 Liên hệ
 - **Email**: khangndhe186523@fpt.edu.vn
 ---
 **Cảm ơn bạn đã sử dụng hệ thống!**
