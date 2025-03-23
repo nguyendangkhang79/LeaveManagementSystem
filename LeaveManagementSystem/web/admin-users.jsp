@@ -46,12 +46,409 @@
     String actionType = request.getParameter("type");
 %>
 
+<style>
+    /* Enhanced styles for User Management */
+    .card {
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        background-color: var(--card-bg-color);
+        overflow: hidden;
+    }
+    
+    .card-header {
+        padding: 1.25rem 1.5rem;
+        background-color: var(--card-bg-color);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .card-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+    }
+    
+    .card-header h2 i {
+        margin-right: 0.75rem;
+        color: var(--primary-color);
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    /* Form Controls */
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: var(--text-color);
+        background-color: var(--card-bg-color);
+        background-clip: padding-box;
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(21, 101, 192, 0.25);
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-color);
+    }
+    
+    /* Button Styles */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-radius: 0.5rem;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+    
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    
+    .btn-primary {
+        color: #fff;
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-secondary {
+        color: var(--text-color);
+        background-color: #f0f0f0;
+        border-color: #f0f0f0;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #e0e0e0;
+        border-color: #e0e0e0;
+        transform: translateY(-2px);
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-danger {
+        color: #fff;
+        background-color: #e74c3c;
+        border-color: #e74c3c;
+    }
+    
+    .btn-danger:hover {
+        background-color: #c0392b;
+        border-color: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-info {
+        color: #fff;
+        background-color: #3498db;
+        border-color: #3498db;
+    }
+    
+    .btn-info:hover {
+        background-color: #2980b9;
+        border-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-sm {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        border-radius: 0.375rem;
+    }
+    
+    /* Table styles */
+    .table-container {
+        overflow-x: auto;
+        border-radius: 0.5rem;
+        background-color: var(--card-bg-color);
+    }
+    
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        background-color: rgba(0, 0, 0, 0.02);
+        color: var(--text-color);
+        font-weight: 600;
+        text-align: left;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-color);
+        vertical-align: middle;
+    }
+    
+    .table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .table tbody tr {
+        transition: background-color 0.3s;
+    }
+    
+    .table tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+    
+    /* Badges */
+    .badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 50rem;
+    }
+    
+    .badge-danger {
+        background-color: #e74c3c;
+        color: #fff;
+    }
+    
+    .badge-primary {
+        background-color: var(--primary-color);
+        color: #fff;
+    }
+    
+    .badge-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+    
+    /* Modals */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1050;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        overflow: auto;
+    }
+    
+    .modal.show {
+        display: flex;
+    }
+    
+    .modal-dialog {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 1.75rem auto;
+        pointer-events: none;
+    }
+    
+    .modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        pointer-events: auto;
+        background-color: var(--card-bg-color);
+        background-clip: padding-box;
+        border-radius: 0.75rem;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+        outline: 0;
+    }
+    
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        border-top-left-radius: 0.75rem;
+        border-top-right-radius: 0.75rem;
+    }
+    
+    .modal-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+    
+    .modal-close {
+        background: transparent;
+        border: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: 1.5rem;
+    }
+    
+    .modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 1.25rem 1.5rem;
+        border-top: 1px solid var(--border-color);
+        border-bottom-right-radius: 0.75rem;
+        border-bottom-left-radius: 0.75rem;
+    }
+    
+    .modal-footer > * {
+        margin: 0 0.25rem;
+    }
+    
+    /* Row & Columns */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -0.75rem;
+        margin-left: -0.75rem;
+    }
+    
+    .col-md-4, .col-md-6 {
+        position: relative;
+        width: 100%;
+        padding-right: 0.75rem;
+        padding-left: 0.75rem;
+    }
+    
+    @media (min-width: 768px) {
+        .col-md-4 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+        }
+        
+        .col-md-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+    
+    /* Alerts */
+    .alert {
+        position: relative;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid transparent;
+        border-radius: 0.5rem;
+    }
+    
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    
+    .alert-dismissible {
+        padding-right: 4rem;
+    }
+    
+    .alert-dismissible .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 1rem 1.25rem;
+        color: inherit;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+        .row {
+            flex-direction: column;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .card-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .card-header h2 {
+            margin-bottom: 1rem;
+        }
+        
+        .modal-dialog {
+            margin: 0.5rem;
+        }
+    }
+</style>
+
 <!-- Page Header -->
 <div class="card">
     <div class="card-header">
         <h2><i class="fas fa-users"></i> Quản lý người dùng</h2>
         
-        <button class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
+        <button class="btn btn-primary" onclick="showModal('addUserModal')">
             <i class="fas fa-user-plus"></i> Thêm người dùng mới
         </button>
     </div>
@@ -59,9 +456,9 @@
 
 <!-- Action Message (if any) -->
 <% if (actionMessage != null && !actionMessage.isEmpty()) { %>
-    <div class="alert alert-<%= actionType != null && actionType.equals("success") ? "success" : "danger" %> alert-dismissible fade show" role="alert">
+    <div class="alert alert-<%= actionType != null && actionType.equals("success") ? "success" : "danger" %> alert-dismissible">
         <%= actionMessage %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="this.parentElement.style.display='none';">
+        <button type="button" class="close" onclick="this.parentElement.style.display='none';">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -112,8 +509,8 @@
 <!-- Users List -->
 <div class="card">
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
+        <div class="table-container">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -127,7 +524,12 @@
                 <tbody>
                     <% if (filteredUsers.isEmpty()) { %>
                         <tr>
-                            <td colspan="6" class="text-center">Không tìm thấy người dùng nào khớp với điều kiện lọc</td>
+                            <td colspan="6" class="text-center" style="text-align: center; padding: 2rem 0;">
+                                <div>
+                                    <i class="fas fa-users" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem; display: block;"></i>
+                                    <p style="color: var(--text-secondary);">Không tìm thấy người dùng nào khớp với điều kiện lọc</p>
+                                </div>
+                            </td>
                         </tr>
                     <% } else { %>
                         <% for (User u : filteredUsers) { %>
@@ -135,8 +537,7 @@
                                 <td><%= u.getId() %></td>
                                 <td><%= u.getUsername() %></td>
                                 <td>
-                                    <span class="badge <%= u.getRole().equals("Admin") ? "badge-danger" : (u.getRole().equals("Manager") ? "badge-primary" : "badge-secondary") %>"
-                                          style="padding: 5px 10px;">
+                                    <span class="badge <%= u.getRole().equals("Admin") ? "badge-danger" : (u.getRole().equals("Manager") ? "badge-primary" : "badge-secondary") %>">
                                         <%= u.getRole() %>
                                     </span>
                                 </td>
@@ -175,14 +576,12 @@
 </div>
 
 <!-- Add User Modal -->
-<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div id="addUserModal" class="modal">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addUserModalLabel">Thêm người dùng mới</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('addUserModal')">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title">Thêm người dùng mới</h5>
+                <button type="button" class="modal-close" onclick="closeModal('addUserModal')">&times;</button>
             </div>
             <form action="UserManagementServlet" method="post">
                 <input type="hidden" name="action" value="add">
@@ -190,13 +589,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="username">Tên đăng nhập <span class="text-danger">*</span></label>
+                                <label for="username">Tên đăng nhập <span style="color: #e74c3c;">*</span></label>
                                 <input type="text" class="form-control" id="username" name="username" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="password">Mật khẩu <span class="text-danger">*</span></label>
+                                <label for="password">Mật khẩu <span style="color: #e74c3c;">*</span></label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                         </div>
@@ -205,7 +604,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="role">Vai trò <span class="text-danger">*</span></label>
+                                <label for="role">Vai trò <span style="color: #e74c3c;">*</span></label>
                                 <select class="form-control" id="role" name="role" required>
                                     <option value="">-- Chọn vai trò --</option>
                                     <option value="Admin">Admin</option>
@@ -216,7 +615,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="department">Phòng ban <span class="text-danger">*</span></label>
+                                <label for="department">Phòng ban <span style="color: #e74c3c;">*</span></label>
                                 <select class="form-control" id="department" name="department" required>
                                     <option value="">-- Chọn phòng ban --</option>
                                     <% for (String dept : allDepartments) { %>
@@ -238,7 +637,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal('addUserModal')">Hủy</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addUserModal')">Hủy</button>
                     <button type="submit" class="btn btn-primary">Thêm người dùng</button>
                 </div>
             </form>
@@ -247,14 +646,12 @@
 </div>
 
 <!-- Edit User Modal -->
-<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div id="editUserModal" class="modal">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">Chỉnh sửa người dùng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('editUserModal')">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title">Chỉnh sửa người dùng</h5>
+                <button type="button" class="modal-close" onclick="closeModal('editUserModal')">&times;</button>
             </div>
             <form action="UserManagementServlet" method="post">
                 <input type="hidden" name="action" value="edit">
@@ -263,7 +660,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="editUsername">Tên đăng nhập <span class="text-danger">*</span></label>
+                                <label for="editUsername">Tên đăng nhập <span style="color: #e74c3c;">*</span></label>
                                 <input type="text" class="form-control" id="editUsername" name="username" required>
                             </div>
                         </div>
@@ -278,7 +675,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="editRole">Vai trò <span class="text-danger">*</span></label>
+                                <label for="editRole">Vai trò <span style="color: #e74c3c;">*</span></label>
                                 <select class="form-control" id="editRole" name="role" required>
                                     <option value="Admin">Admin</option>
                                     <option value="Manager">Manager</option>
@@ -288,7 +685,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="editDepartment">Phòng ban <span class="text-danger">*</span></label>
+                                <label for="editDepartment">Phòng ban <span style="color: #e74c3c;">*</span></label>
                                 <select class="form-control" id="editDepartment" name="department" required>
                                     <% for (String dept : allDepartments) { %>
                                         <option value="<%= dept %>"><%= dept %></option>
@@ -309,7 +706,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal('editUserModal')">Hủy</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editUserModal')">Hủy</button>
                     <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                 </div>
             </form>
@@ -320,20 +717,11 @@
 <!-- JavaScript for user management operations -->
 <script>
     function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-        document.body.classList.remove('modal-open');
-        document.getElementsByClassName('modal-backdrop')[0]?.remove();
+        document.getElementById(modalId).classList.remove('show');
     }
     
     function showModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.style.display = 'block';
-        modal.classList.add('show');
-        document.body.classList.add('modal-open');
-        
-        const backdrop = document.createElement('div');
-        backdrop.className = 'modal-backdrop fade show';
-        document.body.appendChild(backdrop);
+        document.getElementById(modalId).classList.add('show');
     }
     
     function editUser(userId, username, role, department, managerId) {
@@ -345,16 +733,6 @@
         
         showModal('editUserModal');
     }
-    
-    // Open modals when buttons are clicked
-    document.addEventListener('DOMContentLoaded', function() {
-        const addBtn = document.querySelector('[data-target="#addUserModal"]');
-        if (addBtn) {
-            addBtn.addEventListener('click', function() {
-                showModal('addUserModal');
-            });
-        }
-    });
     
     // Auto-close alerts after 5 seconds
     setTimeout(function() {
