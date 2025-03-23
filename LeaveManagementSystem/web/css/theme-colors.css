@@ -1,0 +1,78 @@
+/* Biến màu chủ đề Blue */
+[data-color-theme="blue"] {
+    --primary-color: #1565c0;
+    --secondary-color: #0d47a1;
+    --accent-color: #1e88e5;
+}
+
+/* Biến màu chủ đề Green */
+[data-color-theme="green"] {
+    --primary-color: #2e7d32;
+    --secondary-color: #1b5e20;
+    --accent-color: #43a047;
+}
+
+/* Biến màu chủ đề Red */
+[data-color-theme="red"] {
+    --primary-color: #c62828;
+    --secondary-color: #b71c1c;
+    --accent-color: #e53935;
+}
+
+/* Biến màu chủ đề Purple */
+[data-color-theme="purple"] {
+    --primary-color: #6a1b9a;
+    --secondary-color: #4a148c;
+    --accent-color: #8e24aa;
+}
+
+/* Biến màu chủ đề Teal */
+[data-color-theme="teal"] {
+    --primary-color: #00695c;
+    --secondary-color: #004d40;
+    --accent-color: #00897b;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Các biến màu cho thông báo */
+:root {
+    --toast-success-bg: #d4edda;
+    --toast-success-color: #155724;
+    --toast-info-bg: #d1ecf1;
+    --toast-info-color: #0c5460;
+    --toast-warning-bg: #fff3cd;
+    --toast-warning-color: #856404;
+    --toast-error-bg: #f8d7da;
+    --toast-error-color: #721c24;
+}
+
+[data-theme="dark"] {
+    --toast-success-bg: #1e4620;
+    --toast-success-color: #a3d9a5;
+    --toast-info-bg: #11414d;
+    --toast-info-color: #a2d9e5;
+    --toast-warning-bg: #533f03;
+    --toast-warning-color: #ffda6a;
+    --toast-error-bg: #50171e;
+    --toast-error-color: #f1adb2;
+}
