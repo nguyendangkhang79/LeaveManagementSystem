@@ -114,195 +114,471 @@
         }
         dailyLeaveCount.put(date, count);
     }
+    
+    // Calculate available employees
+    int totalEmployees = departmentEmployees.size();
+    if (user.getRole().equals("Manager") && !user.isAdmin()) {
+        totalEmployees--; // Don't count the manager
+    }
+    int onLeaveToday = dailyLeaveCount.getOrDefault(today, 0);
+    int availableToday = totalEmployees - onLeaveToday;
+    if (availableToday < 0) availableToday = 0;
 %>
 
-<!-- Page Header -->
-<div class="card">
-    <div class="card-header">
-        <h2><i class="fas fa-calendar"></i> <%= user.isAdmin() ? "Lịch nghỉ phép toàn công ty" : "Lịch nghỉ phép phòng ban" %></h2>
+<style>
+    /* Card styles */
+    .leave-calendar-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    
+    .leave-calendar-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .leave-calendar-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+    
+    .leave-calendar-title i {
+        margin-right: 10px;
+        color: #3498db;
+    }
+    
+    .leave-calendar-body {
+        padding: 20px;
+    }
+    
+    /* Form styles */
+    .leave-filter-form {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        gap: 15px;
+    }
+    
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .filter-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #555;
+    }
+    
+    .filter-control {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: white;
+    }
+    
+    .filter-button {
+        margin-top: 25px;
+        padding: 8px 16px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .filter-button i {
+        margin-right: 8px;
+    }
+    
+    /* Period display */
+    .period-display {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .period-text {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+    
+    .period-text i {
+        margin-right: 10px;
+        color: #3498db;
+    }
+    
+    .period-navigation {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    
+    .period-nav-button {
+        padding: 6px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: white;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .period-nav-button:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .period-nav-button i {
+        margin-right: 5px;
+    }
+    
+    .period-nav-button.current {
+        background-color: #e3f2fd;
+        border-color: #3498db;
+        color: #3498db;
+    }
+    
+    /* Legend */
+    .leave-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+    }
+    
+    .legend-work {
+        background-color: #e8f5e9;
+    }
+    
+    .legend-leave {
+        background-color: #ffebee;
+    }
+    
+    .legend-weekend {
+        background-color: #f5f5f5;
+    }
+    
+    .legend-today {
+        background-color: #e3f2fd;
+    }
+    
+    /* Calendar table */
+    .calendar-container {
+        overflow-x: auto;
+        margin-top: 20px;
+    }
+    
+    .calendar-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: 800px;
+    }
+    
+    .calendar-table th,
+    .calendar-table td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .calendar-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #555;
+        position: sticky;
+        top: 0;
+    }
+    
+    .calendar-table th:first-child {
+        text-align: left;
+    }
+    
+    .calendar-table td:first-child {
+        text-align: left;
+        background-color: #f9f9f9;
+        position: sticky;
+        left: 0;
+        font-weight: 500;
+    }
+    
+    .user-role {
+        display: block;
+        font-size: 12px;
+        color: #777;
+        font-weight: normal;
+    }
+    
+    .date-head {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .date-number {
+        font-weight: bold;
+    }
+    
+    .date-day {
+        font-size: 12px;
+        color: #777;
+    }
+    
+    .date-count {
+        margin-top: 5px;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    
+    .count-high {
+        color: #e74c3c;
+    }
+    
+    .count-medium {
+        color: #f39c12;
+    }
+    
+    .today-cell {
+        background-color: #e3f2fd;
+    }
+    
+    .weekend-cell {
+        background-color: #f5f5f5;
+    }
+    
+    .leave-cell {
+        background-color: #ffebee;
+    }
+    
+    .work-cell {
+        background-color: #e8f5e9;
+    }
+    
+    .leave-check {
+        color: #e74c3c;
+    }
+    
+    /* Stats cards */
+    .stats-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .stat-card {
+        flex: 1;
+        min-width: 200px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .stat-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 15px;
+    }
+    
+    .stat-value {
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1;
+    }
+    
+    .stat-blue {
+        color: #3498db;
+    }
+    
+    .stat-red {
+        color: #e74c3c;
+    }
+    
+    .stat-green {
+        color: #2ecc71;
+    }
+    
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    
+    .empty-state i {
+        font-size: 48px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h3 {
+        font-size: 20px;
+        color: #555;
+        margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+        color: #777;
+        margin-bottom: 20px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 768px) {
+        .leave-calendar-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
         
-        <a href="viewLeaves.jsp" class="btn btn-outline-primary btn-sm">
-            <i class="fas fa-arrow-left"></i> Quay lại danh sách đơn
+        .filter-group {
+            flex: 0 0 100%;
+        }
+        
+        .period-display {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .stats-container {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<!-- Page Container -->
+<div class="leave-calendar-card">
+    <div class="leave-calendar-header">
+        <h2 class="leave-calendar-title">
+            <i class="fas fa-calendar"></i> <%= user.isAdmin() ? "Lịch nghỉ phép toàn công ty" : "Lịch nghỉ phép phòng ban" %>
+        </h2>
+        
+        <a href="viewLeaves.jsp" style="color: #3498db; text-decoration: none; display: flex; align-items: center;">
+            <i class="fas fa-arrow-left" style="margin-right: 5px;"></i> Quay lại danh sách đơn
         </a>
     </div>
-</div>
-
-<!-- Date Selection and Department Filter -->
-<div class="card">
-    <div class="card-body">
-        <form action="agenda.jsp" method="get" class="mb-4">
-            <div class="row">
-                <% if (user.isAdmin()) { %>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="department" class="form-label">Phòng ban</label>
-                        <select id="department" name="department" class="form-control">
-                            <option value="all" <%= "all".equals(departmentFilter) ? "selected" : "" %>>Tất cả các phòng ban</option>
-                            <% for (String dept : allDepartments) { %>
-                                <option value="<%= dept %>" <%= dept.equals(departmentFilter) && !"all".equals(departmentFilter) ? "selected" : "" %>><%= dept %></option>
-                            <% } %>
-                        </select>
-                    </div>
-                </div>
-                <% } %>
-                
-                <div class="col-md-<%= user.isAdmin() ? "3" : "4" %>">
-                    <div class="form-group">
-                        <label for="startDate" class="form-label">Từ ngày</label>
-                        <input type="date" id="startDate" name="startDate" value="<%= startDate %>" class="form-control" required>
-                    </div>
-                </div>
-                
-                <div class="col-md-<%= user.isAdmin() ? "3" : "4" %>">
-                    <div class="form-group">
-                        <label for="endDate" class="form-label">Đến ngày</label>
-                        <input type="date" id="endDate" name="endDate" value="<%= endDate %>" class="form-control" required>
-                    </div>
-                </div>
-                
-                <div class="col-md-<%= user.isAdmin() ? "3" : "4" %>">
-                    <div class="form-group" style="display: flex; align-items: flex-end; height: 100%;">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-search"></i> Xem lịch
-                        </button>
-                    </div>
-                </div>
+    
+    <div class="leave-calendar-body">
+        <!-- Filter Form -->
+        <form action="agenda.jsp" method="get" class="leave-filter-form">
+            <% if (user.isAdmin()) { %>
+            <div class="filter-group">
+                <label for="department" class="filter-label">Phòng ban</label>
+                <select id="department" name="department" class="filter-control">
+                    <option value="all" <%= "all".equals(departmentFilter) ? "selected" : "" %>>Tất cả các phòng ban</option>
+                    <% for (String dept : allDepartments) { %>
+                        <option value="<%= dept %>" <%= dept.equals(departmentFilter) && !"all".equals(departmentFilter) ? "selected" : "" %>><%= dept %></option>
+                    <% } %>
+                </select>
             </div>
+            <% } %>
+            
+            <div class="filter-group">
+                <label for="startDate" class="filter-label">Từ ngày</label>
+                <input type="date" id="startDate" name="startDate" value="<%= startDate %>" class="filter-control" required>
+            </div>
+            
+            <div class="filter-group">
+                <label for="endDate" class="filter-label">Đến ngày</label>
+                <input type="date" id="endDate" name="endDate" value="<%= endDate %>" class="filter-control" required>
+            </div>
+            
+            <button type="submit" class="filter-button">
+                <i class="fas fa-search"></i> Xem lịch
+            </button>
         </form>
         
-        <div class="calendar-header">
-            <h3 class="calendar-title">
+        <!-- Period Display and Navigation -->
+        <div class="period-display">
+            <div class="period-text">
                 <i class="far fa-calendar-alt"></i> <%= periodDisplay %>
                 <% if (user.isAdmin() && !"all".equals(departmentFilter)) { %>
                     - Phòng ban: <%= departmentFilter %>
                 <% } %>
-            </h3>
+            </div>
             
-            <div class="calendar-navigation">
+            <div class="period-navigation">
                 <a href="agenda.jsp?startDate=<%= previousPeriodStart %>&endDate=<%= previousPeriodStart.plusDays(13) %><%= user.isAdmin() ? "&department=" + departmentFilter : "" %>" 
-                   class="btn btn-outline-secondary btn-sm">
+                   class="period-nav-button">
                     <i class="fas fa-chevron-left"></i> Kỳ trước
                 </a>
                 
                 <a href="agenda.jsp?startDate=<%= today %>&endDate=<%= today.plusDays(13) %><%= user.isAdmin() ? "&department=" + departmentFilter : "" %>" 
-                   class="btn btn-outline-primary btn-sm">
+                   class="period-nav-button current">
                     Kỳ hiện tại
                 </a>
                 
                 <a href="agenda.jsp?startDate=<%= nextPeriodStart %>&endDate=<%= nextPeriodStart.plusDays(13) %><%= user.isAdmin() ? "&department=" + departmentFilter : "" %>" 
-                   class="btn btn-outline-secondary btn-sm">
+                   class="period-nav-button">
                     Kỳ sau <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Legend -->
-<div class="legend" style="display: flex; gap: 20px; margin-bottom: 15px;">
-    <div class="legend-item" style="display: flex; align-items: center; gap: 5px;">
-        <div style="width: 15px; height: 15px; border-radius: 3px; background-color: #e8f5e9;"></div>
-        <span>Ngày làm việc</span>
-    </div>
-    <div class="legend-item" style="display: flex; align-items: center; gap: 5px;">
-        <div style="width: 15px; height: 15px; border-radius: 3px; background-color: #ffebee;"></div>
-        <span>Ngày nghỉ phép</span>
-    </div>
-    <div class="legend-item" style="display: flex; align-items: center; gap: 5px;">
-        <div style="width: 15px; height: 15px; border-radius: 3px; background-color: #f5f5f5;"></div>
-        <span>Cuối tuần</span>
-    </div>
-    <div class="legend-item" style="display: flex; align-items: center; gap: 5px;">
-        <div style="width: 15px; height: 15px; border-radius: 3px; background-color: #e3f2fd;"></div>
-        <span>Hôm nay</span>
-    </div>
-</div>
-
-<!-- Calendar View -->
-<div class="card">
-    <div class="card-body">
-        <div style="overflow-x: auto;">
-            <table class="table table-bordered calendar-table">
-                <thead>
-                    <tr>
-                        <th style="min-width: 150px; position: sticky; left: 0; background-color: #f5f5f5; z-index: 1;">Nhân viên</th>
-                        <% 
-                        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-                            String formattedDate = date.format(dateFormatter);
-                            String dayOfWeek = date.getDayOfWeek().toString().substring(0, 3);
-                            boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
-                            boolean isToday = date.equals(today);
-                            
-                            String headerClass = isWeekend ? "background-color: #f5f5f5;" : "";
-                            if (isToday) headerClass += "background-color: #e3f2fd;";
-                            
-                            int todayLeaveCount = dailyLeaveCount.getOrDefault(date, 0);
-                            String countColor = "color: inherit;";
-                            if (todayLeaveCount > 0) {
-                                countColor = todayLeaveCount > departmentEmployees.size() / 3 ? "color: #e74c3c;" : "color: #f39c12;";
-                            }
-                        %>
-                            <th style="<%= headerClass %> text-align: center;">
-                                <div style="font-weight: bold;"><%= formattedDate %></div>
-                                <div style="font-size: 12px;"><%= dayOfWeek %></div>
-                                <% if (!isWeekend) { %>
-                                    <div style="margin-top: 3px; font-size: 11px; <%= countColor %> font-weight: bold;">
-                                        <i class="fas fa-user-minus"></i> <%= todayLeaveCount %>
-                                    </div>
-                                <% } %>
-                            </th>
-                        <% } %>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% 
-                    boolean hasEmployees = false;
-                    for (User employee : departmentEmployees) {
-                        // Skip showing current user in the table if they are Manager
-                        if (employee.getId() == user.getId() && user.isManager() && !user.isAdmin()) continue;
-                        
-                        hasEmployees = true;
-                        List<LocalDate> employeeLeaves = employeeLeaveDays.getOrDefault(employee.getId(), new ArrayList<>());
-                    %>
-                    <tr>
-                        <td style="position: sticky; left: 0; background-color: #f9f9f9; font-weight: 500; z-index: 1;">
-                            <%= employee.getUsername() %>
-                            <span style="font-size: 11px; color: #777; display: block;"><%= employee.getRole() %></span>
-                        </td>
-                        <% 
-                        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-                            boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
-                            boolean isToday = date.equals(today);
-                            boolean isLeaveDay = employeeLeaves.contains(date);
-                            
-                            String cellStyle = "";
-                            if (isWeekend) {
-                                cellStyle = "background-color: #f5f5f5;";
-                            } else if (isLeaveDay) {
-                                cellStyle = "background-color: #ffebee;";
-                            } else {
-                                cellStyle = "background-color: #e8f5e9;";
-                            }
-                            
-                            if (isToday) cellStyle += "background-color: #e3f2fd;";
-                        %>
-                            <td style="<%= cellStyle %> text-align: center;">
-                                <% if (isLeaveDay) { %>
-                                    <i class="fas fa-check" style="color: #e74c3c;"></i>
-                                <% } %>
-                            </td>
-                        <% } %>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
+        
+        <!-- Legend -->
+        <div class="leave-legend">
+            <div class="legend-item">
+                <div class="legend-color legend-work"></div>
+                <span>Ngày làm việc</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-leave"></div>
+                <span>Ngày nghỉ phép</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-weekend"></div>
+                <span>Cuối tuần</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-today"></div>
+                <span>Hôm nay</span>
+            </div>
         </div>
         
-        <% if (!hasEmployees) { %>
-            <div style="text-align: center; padding: 30px;">
-                <i class="fas fa-users" style="font-size: 3rem; color: #ddd; margin-bottom: 15px;"></i>
+        <!-- Calendar Table -->
+        <% if (departmentEmployees.isEmpty()) { %>
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
                 <h3>Không có nhân viên</h3>
-                <p style="color: #777;">
+                <p>
                     <% if (user.isAdmin() && !"all".equals(departmentFilter)) { %>
                         Không có nhân viên nào trong phòng ban <%= departmentFilter %>.
                     <% } else { %>
@@ -310,54 +586,105 @@
                     <% } %>
                 </p>
             </div>
+        <% } else { %>
+            <div class="calendar-container">
+                <table class="calendar-table">
+                    <thead>
+                        <tr>
+                            <th>Nhân viên</th>
+                            <% 
+                            for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+                                String formattedDate = date.format(dateFormatter);
+                                String dayOfWeek = date.getDayOfWeek().toString().substring(0, 3);
+                                boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
+                                boolean isToday = date.equals(today);
+                                
+                                String headerClass = isToday ? "today-cell" : (isWeekend ? "weekend-cell" : "");
+                                
+                                int todayLeaveCount = dailyLeaveCount.getOrDefault(date, 0);
+                                String countClass = "";
+                                if (todayLeaveCount > 0) {
+                                    countClass = todayLeaveCount > departmentEmployees.size() / 3 ? "count-high" : "count-medium";
+                                }
+                            %>
+                                <th class="<%= headerClass %>">
+                                    <div class="date-head">
+                                        <span class="date-number"><%= formattedDate %></span>
+                                        <span class="date-day"><%= dayOfWeek %></span>
+                                        <% if (!isWeekend && todayLeaveCount > 0) { %>
+                                            <span class="date-count <%= countClass %>">
+                                                <i class="fas fa-user-minus"></i> <%= todayLeaveCount %>
+                                            </span>
+                                        <% } %>
+                                    </div>
+                                </th>
+                            <% } %>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                        for (User employee : departmentEmployees) {
+                            // Skip showing current user in the table if they are Manager
+                            if (employee.getId() == user.getId() && user.isManager() && !user.isAdmin()) continue;
+                            
+                            List<LocalDate> employeeLeaves = employeeLeaveDays.getOrDefault(employee.getId(), new ArrayList<>());
+                        %>
+                        <tr>
+                            <td>
+                                <%= employee.getUsername() %>
+                                <span class="user-role"><%= employee.getRole() %></span>
+                            </td>
+                            <% 
+                            for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+                                boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
+                                boolean isToday = date.equals(today);
+                                boolean isLeaveDay = employeeLeaves.contains(date);
+                                
+                                String cellClass = isToday ? "today-cell" : (isWeekend ? "weekend-cell" : (isLeaveDay ? "leave-cell" : "work-cell"));
+                            %>
+                                <td class="<%= cellClass %>">
+                                    <% if (isLeaveDay) { %>
+                                        <i class="fas fa-check leave-check"></i>
+                                    <% } %>
+                                </td>
+                            <% } %>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
         <% } %>
     </div>
 </div>
 
-<!-- Department Overview -->
-<div class="card">
-    <div class="card-header">
-        <h3><i class="fas fa-chart-pie"></i> Thống kê nhân sự</h3>
+<!-- Stats Section -->
+<div class="leave-calendar-card">
+    <div class="leave-calendar-header">
+        <h3 class="leave-calendar-title">
+            <i class="fas fa-chart-pie"></i> Thống kê nhân sự
+        </h3>
     </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card mb-0">
-                    <div class="card-body text-center">
-                        <h3 class="mb-3">Tổng nhân viên</h3>
-                        <div style="font-size: 2.5rem; font-weight: bold; color: #3498db;">
-                            <%= hasEmployees ? departmentEmployees.size() - (user.getRole().equals("Manager") && !user.isAdmin() ? 1 : 0) : 0 %>
-                        </div>
-                    </div>
+    
+    <div class="leave-calendar-body">
+        <div class="stats-container">
+            <div class="stat-card">
+                <h4 class="stat-title">Tổng nhân viên</h4>
+                <div class="stat-value stat-blue">
+                    <%= totalEmployees %>
                 </div>
             </div>
             
-            <div class="col-md-4">
-                <div class="card mb-0">
-                    <div class="card-body text-center">
-                        <h3 class="mb-3">Nghỉ phép hôm nay</h3>
-                        <% 
-                            int onLeaveToday = dailyLeaveCount.getOrDefault(today, 0);
-                        %>
-                        <div style="font-size: 2.5rem; font-weight: bold; color: #e74c3c;">
-                            <%= onLeaveToday %>
-                        </div>
-                    </div>
+            <div class="stat-card">
+                <h4 class="stat-title">Nghỉ phép hôm nay</h4>
+                <div class="stat-value stat-red">
+                    <%= onLeaveToday %>
                 </div>
             </div>
             
-            <div class="col-md-4">
-                <div class="card mb-0">
-                    <div class="card-body text-center">
-                        <h3 class="mb-3">Đi làm hôm nay</h3>
-                        <% 
-                            int availableToday = hasEmployees ? departmentEmployees.size() - onLeaveToday : 0;
-                            if (user.getRole().equals("Manager") && !user.isAdmin()) availableToday--;
-                        %>
-                        <div style="font-size: 2.5rem; font-weight: bold; color: #2ecc71;">
-                            <%= availableToday %>
-                        </div>
-                    </div>
+            <div class="stat-card">
+                <h4 class="stat-title">Đi làm hôm nay</h4>
+                <div class="stat-value stat-green">
+                    <%= availableToday %>
                 </div>
             </div>
         </div>
@@ -374,6 +701,7 @@
             if (endDateInput.value < startDateInput.value) {
                 endDateInput.value = startDateInput.value;
             }
+            endDateInput.min = startDateInput.value;
         });
         
         endDateInput.addEventListener('change', function() {
@@ -394,6 +722,9 @@
                 alert('Để tối ưu hiệu suất, khoảng thời gian xem được giới hạn tối đa 31 ngày.');
             }
         });
+        
+        // Set initial min value for end date
+        endDateInput.min = startDateInput.value;
     });
 </script>
 
