@@ -43,7 +43,13 @@ public class LeaveRequestServlet extends HttpServlet {
         } else if ("approve".equals(action) || "reject".equals(action)) {
             int leaveId = Integer.parseInt(request.getParameter("leaveId"));
             String status = "approve".equals(action) ? "Approved" : "Rejected";
-            dao.updateLeaveRequest(leaveId, status, user.getId());
+            
+            // Thêm lấy giá trị approvalNote từ request
+            String approvalNote = request.getParameter("approvalNote");
+            
+            // Gọi phương thức updateLeaveRequest có tham số approvalNote
+            dao.updateLeaveRequest(leaveId, status, user.getId(), approvalNote);
+            
             response.sendRedirect("viewLeaves.jsp");
         }
     }
